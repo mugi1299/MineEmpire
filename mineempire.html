@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MineEmpire | Quality Mining Server</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Noto+Sans+JP:wght@200;300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --silver: #f1f5f9;
+            --purple-light: #e9d5ff;
+            --bg-dark: #020617;
+            --glass: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --nav-bg: rgba(2, 6, 23, 0.85);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            color: var(--silver);
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            font-weight: 300;
+            background: var(--bg-dark);
+            line-height: 1.8;
+        }
+
+        .bg-fixed {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: linear-gradient(rgba(2, 6, 23, 0.5), rgba(2, 6, 23, 0.8)), 
+                        url('mineempirebg.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            height: 70px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+            margin: 0; padding: 0;
+        }
+
+        /* --- ナビゲーションアニメーション追加 --- */
+        .nav-links a {
+            text-decoration: none;
+            color: var(--silver);
+            font-size: 0.7rem;
+            letter-spacing: 0.1rem;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background: var(--purple-light);
+            transition: 0.3s;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover {
+            color: var(--purple-light);
+            text-shadow: 0 0 8px rgba(233, 213, 255, 0.5);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:active {
+            transform: translateY(-2px);
+        }
+
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo-img {
+            max-width: 500px;
+            width: 85%;
+            filter: drop-shadow(0 0 30px rgba(188, 111, 241, 0.15));
+            margin-bottom: 20px;
+        }
+
+        .hero-subtext {
+            font-size: 0.85rem;
+            font-weight: 200;
+            letter-spacing: 0.5rem;
+            color: var(--purple-light);
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 0.1rem;
+            text-decoration: none;
+            color: white;
+            border: 1px solid var(--glass-border);
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            transition: 0.4s;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: white;
+            color: var(--bg-dark);
+            border-color: white;
+        }
+
+        .section-container {
+            max-width: 1000px;
+            margin: 0 auto 100px;
+            padding: 0 20px;
+            scroll-margin-top: 100px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(30px);
+            padding: 60px 40px;
+            border-radius: 4px;
+        }
+
+        .section-header {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 200;
+            margin-bottom: 50px;
+            letter-spacing: 0.3rem;
+            color: var(--purple-light);
+        }
+
+        h3 { color: var(--purple-light); font-weight: 400; font-size: 1.1rem; margin-top: 30px; border-left: 2px solid var(--purple-light); padding-left: 15px; }
+        .info-box { background: rgba(255,255,255,0.03); padding: 20px; margin: 15px 0; font-size: 0.9rem; border-radius: 2px; }
+        
+        /* 規約2カラムレイアウト */
+        .rules-grid-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 40px;
+        }
+        @media (max-width: 768px) {
+            .rules-grid-layout { grid-template-columns: 1fr; }
+        }
+
+        .rules-content { font-size: 0.85rem; color: #94a3b8; }
+        .rules-section { margin-bottom: 30px; }
+        .rules-section h4 { color: var(--purple-light); font-weight: 400; margin-bottom: 10px; border-bottom: 1px solid var(--glass-border); display: inline-block; padding-bottom: 5px; }
+        .rules-list { list-style: none; padding: 0; }
+        .rules-list li { margin-bottom: 10px; padding-left: 15px; position: relative; }
+        .rules-list li::before { content: ""; position: absolute; left: 0; top: 10px; width: 4px; height: 4px; background: var(--purple-light); border-radius: 50%; }
+
+        .staff-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+            gap: 20px; 
+        }
+        .staff-card { 
+            background: rgba(255, 255, 255, 0.03); 
+            padding: 25px; 
+            border-top: 1px solid var(--glass-border);
+        }
+        .staff-role { font-size: 0.65rem; color: var(--purple-light); letter-spacing: 0.15rem; }
+        .staff-name { font-size: 1.1rem; margin: 8px 0; font-weight: 400; }
+        .staff-desc { font-size: 0.75rem; color: #94a3b8; list-style: none; padding: 0; margin: 0; }
+        .staff-desc li::before { content: "• "; color: var(--purple-light); }
+
+        footer { text-align: center; padding: 60px; font-size: 0.7rem; color: #475569; }
+        
+        #toast { 
+            visibility: hidden; 
+            background: #fff; 
+            color: #000; 
+            padding: 12px 30px; 
+            position: fixed; 
+            bottom: 40px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            font-size: 0.75rem; 
+            z-index: 2000; 
+            border-radius: 2px;
+        }
+        #toast.active { visibility: visible; animation: fadeEffect 2.5s; }
+        @keyframes fadeEffect { 0% { opacity: 0; bottom: 30px; } 15%, 85% { opacity: 1; bottom: 40px; } 100% { opacity: 0; bottom: 50px; } }
+    </style>
+</head>
+<body>
+
+<div class="bg-fixed"></div>
+
+<nav>
+    <ul class="nav-links">
+        <li><a href="#">TOP</a></li>
+        <li><a href="#about">ABOUT</a></li>
+        <li><a href="#join">JOIN</a></li>
+        <li><a href="#terms">TERMS</a></li>
+        <li><a href="#discord">DISCORD</a></li>
+        <li><a href="#staff">STAFF</a></li>
+    </ul>
+</nav>
+
+<header>
+    <img src="mineempireicon.png" alt="MineEmpire Logo" class="logo-img">
+    <div class="hero-subtext">Quality Mining Experience</div>
+    
+    <div class="btn-container">
+        <div class="btn" onclick="copyText('mineempire.minecraft.party', 'IPアドレスをコピーしました')">COPY IP</div>
+        <div class="btn" onclick="copyText('3321', 'ポート番号をコピーしました')">COPY PORT</div>
+        <a href="#discord" class="btn">JOIN DISCORD</a>
+    </div>
+</header>
+
+<section id="about" class="section-container">
+    <div class="glass-card">
+        <h2 class="section-header">SERVER OVERVIEW</h2>
+        <div class="staff-grid">
+            <div class="feature-item">
+                <h3>Advanced Mining System</h3>
+                <p style="font-size: 0.85rem; color: #94a3b8;">既存の枠組みに捉われない独自の採掘システム。ブロックを叩いた時にHPバーが表示され、ダメージを与えて削り切るような、これまでのマイクラにはなかった新しい採掘感覚を楽しめます。</p>
+            </div>
+            <div class="feature-item">
+                <h3>Multi-Layered Elements</h3>
+                <p style="font-size: 0.85rem; color: #94a3b8;">採掘以外にも広がる多彩な遊び。本格的な釣りや、自分の見た目を飾るコスメティック機能など、その日の気分に合わせて自由に過ごせる要素をたくさん用意しました。</p>
+            </div>
+            <div class="feature-item">
+                <h3>Exclusive Architecture</h3>
+                <p style="font-size: 0.85rem; color: #94a3b8;">他の採掘サーバーには存在しない、独自の採掘システムにより実現した機能を多数搭載。ツルハシの強化値や採掘スピード、オリジナルのバフ効果など、他では体験できない自由なカスタマイズが可能です。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="join" class="section-container">
+    <div class="glass-card">
+        <h2 class="section-header">HOW TO JOIN</h2>
+        <h3>サーバー情報</h3>
+        <div class="info-box">
+            IP: mineempire.minecraft.party<br>
+            PORT: 3321
+        </div>
+        <h3>フレンドから参加</h3>
+        <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 20px;">
+            ゲーマータグ "MineEmpire11" にフレンド申請を送ってください。 しばらくするとフレンド一覧に<br>
+            サーバーが表示され、そこから参加できるようになります。
+        </p>
+        <h3>開放時間</h3>
+        <p style="font-size: 0.85rem; color: #94a3b8;">
+            毎日およそ <b>16:00 ～ 23:00</b><br>
+            <small>※時間外は接続できません。多少のズレや、事情により開放できない日があります。</small>
+        </p>
+    </div>
+</section>
+
+<section id="terms" class="section-container">
+    <div class="glass-card">
+        <h2 class="section-header">TERMS OF SERVICE</h2>
+        <div class="rules-grid-layout">
+            <div class="rules-section">
+                <h4 style="color: #ef4444;">【禁止事項】</h4>
+                <ul class="rules-list">
+                    <li>ゲームを有利にする改造クライアント・ツール・テクスチャの使用</li>
+                    <li>差別的な発言や、他人を不快にさせる発言</li>
+                    <li>血や暴力表現などを含む、不適切なスキンの使用</li>
+                    <li>サーバーや運営スタッフを強く侮辱・軽視する行為</li>
+                    <li>バグを利用した不正行為や、それを広める行為</li>
+                    <li>Ban回避の試みや、DDoSなどサーバーに負荷や被害を与える行為</li>
+                    <li>個人情報の公開、なりすましなど、他人やコミュニティに迷惑をかける行為</li>
+                    <li>パックデータやマップデータを不正に取り出し、使用・配布する行為</li>
+                    <li>売名目的の行為や、他サーバーへの勧誘・引き抜き行為</li>
+                    <li>他のプレイヤーのプレイをわざと邪魔する行為</li>
+                    <li>運営が想定していない動作や仕様を利用して有利になる行為</li>
+                </ul>
+            </div>
+            <div class="rules-content">
+                <div class="rules-section">
+                    <h4 style="color: #fbbf24;">【非推奨事項】</h4>
+                    <ul class="rules-list">
+                        <li>UIや文字表示に影響を与えるテクスチャの使用</li>
+                        <li>非常に長時間にわたる連続プレイ</li>
+                        <li>回線が不安定な状態での接続</li>
+                    </ul>
+                    <p style="font-size: 0.75rem; color: #64748b;">※これらは直ちに処罰されるものではありませんが、状況によっては制限を行う場合があります。</p>
+                </div>
+                <div class="rules-section">
+                    <h4>【許容事項】</h4>
+                    <ul class="rules-list">
+                        <li>サーバーに関する公開情報の共有</li>
+                        <li>常識の範囲内での配信や動画投稿</li>
+                        <li>見た目のみが変わる軽いテクスチャ変更</li>
+                    </ul>
+                </div>
+                <div class="rules-section">
+                    <h4>【注意事項】</h4>
+                    <ul class="rules-list">
+                        <li>運営の判断で対応を行う場合があります。</li>
+                        <li>プレイヤーデータの保存は保証されていません。</li>
+                        <li>ルールは予告なく変更されることがあります。</li>
+                        <li>SNS投稿時は、オーナー <b>mugi1299</b> へご連絡ください。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="discord" class="section-container">
+    <div class="glass-card" style="text-align: center;">
+        <h2 class="section-header">OFFICIAL DISCORD</h2>
+        <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 30px;">
+            最新の開放通知、アップデート情報、コミュニティでの交流は公式Discordで行っています。<br>
+            規約の詳細確認や、運営への連絡もこちらからどうぞ。
+        </p>
+        <a href="https://discord.gg/kjzzzSWjFD" target="_blank" class="btn" style="display: inline-block;">JOIN OUR COMMUNITY</a>
+    </div>
+</section>
+
+<section id="staff" class="section-container">
+    <div class="glass-card">
+        <h2 class="section-header">ADMINISTRATION</h2>
+        <div class="staff-grid">
+            <div class="staff-card">
+                <div class="staff-role">OWNER</div>
+                <div class="staff-name">mugi1299</div>
+                <ul class="staff-desc">
+                    <li>システム、テクスチャ、モデル製作</li>
+                    <li>建築</li>
+                    <li>システム考案</li>
+                    <li>サーバー管理</li>
+                    <li>Discord管理</li>
+                    <li>規約違反者の処罰</li>
+                </ul>
+            </div>
+            <div class="staff-card">
+                <div class="staff-role">ADMIN</div>
+                <div class="staff-name">wipe5122</div>
+                <ul class="staff-desc"><li>Discord管理</li></ul>
+            </div>
+            <div class="staff-card">
+                <div class="staff-role">ADMIN</div>
+                <div class="staff-name">Mutsua0319</div>
+                <ul class="staff-desc"><li>規約違反者の処罰</li><li>システム考案</li></ul>
+            </div>
+            <div class="staff-card">
+                <div class="staff-role">ASSISTANT</div>
+                <div class="staff-name">Q4m8 (wasabi)</div>
+                <ul class="staff-desc"><li>サーバー管理</li></ul>
+            </div>
+            <div class="staff-card">
+                <div class="staff-role">ASSISTANT</div>
+                <div class="staff-name">Kazato965947</div>
+                <ul class="staff-desc"><li>規約違反者の処罰</li><li>システム考案</li></ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>&copy; 2026 MINEEMPIRE PROJECT</footer>
+
+<div id="toast"></div>
+
+<script>
+    function copyText(text, message) {
+        navigator.clipboard.writeText(text);
+        const t = document.getElementById("toast");
+        t.innerText = message;
+        t.classList.add("active");
+        setTimeout(() => { t.classList.remove("active"); }, 2500);
+    }
+</script>
+
+</body>
+</html>
